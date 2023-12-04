@@ -1,7 +1,7 @@
-from typing import TypedDict, List, Optional, Dict, Any, TypeVar, Generic
+from typing import TypedDict, List, Optional
 
 
-class PlaceOrderInput(TypedDict):
+class CreateOrderInput(TypedDict):
     price: str
     size: str
     symbol: str
@@ -9,10 +9,10 @@ class PlaceOrderInput(TypedDict):
     clientOrderId: str
 
 
-def create_place_order_headers(*, signature: str, timestamp: str):
+def gen_create_order_headers(*, signature: str, message_data: str):
     return {
         "X-API-SIGN": signature,
-        "X-API-TIMESTAMP": timestamp,
+        "X-API-EIP712-MSG": message_data,
     }
 
 

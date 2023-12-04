@@ -5,12 +5,12 @@ import requests
 
 from pythonsdk.types import (
     CancelOrderResponse,
+    CreateOrderInput,
     MarketDepthResponse,
     OrderResponse,
     OrdersForUserResponse,
-    PlaceOrderInput,
     SymbolResponse,
-    create_place_order_headers,
+    gen_create_order_headers,
 )
 
 
@@ -45,15 +45,15 @@ class OrderBookSDK:
                 "message": err.response.text,
             }
 
-    def place_order(
-        self, *, order_input: PlaceOrderInput, signature: str, timestamp: str
+    def create_order(
+        self, *, order_input: CreateOrderInput, signature: str, message_data: str
     ) -> OrderResponse:
         return self._send_request(
             method="POST",
             endpoint="api/v1/order",
             data=order_input,
-            custom_headers=create_place_order_headers(
-                signature=signature, timestamp=timestamp
+            custom_headers=gen_create_order_headers(
+                signature=signature, message_data=message_data
             ),
         )
 

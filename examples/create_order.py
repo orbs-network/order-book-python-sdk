@@ -1,18 +1,22 @@
-import os
-import time
-
-from pythonsdk.client import OrderBookSDK
-from pythonsdk.types import PlaceOrderInput
+"""Create a new order"""
 
 import asyncio
+import os
+
+from pythonsdk.client import OrderBookSDK
+from pythonsdk.order_signer import OrderSigner
+from pythonsdk.types import CreateOrderInput
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost")
 
 
 async def main():
     client = OrderBookSDK(base_url=BASE_URL, api_key="38052ba1012aa665458cf2d28b9d057d")
+    signer = OrderSigner(
+        private_key="0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    )
 
-    order_input = PlaceOrderInput(
+    order_input = CreateOrderInput(
         price="10000",
         size="10",
         symbol="USDC-ETH",
@@ -20,16 +24,15 @@ async def main():
         clientOrderId="550e8400-e29b-41d4-a716-446655440000",
     )
 
-    signature = "0x6e0e553b220cdc66646adf11ca929dfdcd69e410c1389ff2436c7e44bce7eb9c08f41336d2a8cff599acf80f7d3e120019e3006c74978ba3ed1b2ff82e093e4e1c"
-    timestamp = str(int(time.time()))
+    signature, message_data = signer.prepare_and_sign_order(order_input)
 
-    res = client.place_order(
+    res = client.create_order(
         order_input=order_input,
         signature=signature,
-        timestamp=timestamp,
+        message_data=message_data,
     )
 
-    print(f"Place order response: {res}")
+    print(f"Create order response: {res}")
 
 
 if __name__ == "__main__":

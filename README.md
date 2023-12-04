@@ -9,11 +9,18 @@ This Python SDK allows you to query the Orb's order book and place orders.
 - `examples`: Example scripts
 - `pythonsdk`: The Python SDK source code
 
-## Installation (with Poetry)
+## Installation
 
 1. Ensure you have at least Python 3.8 installed
-2. Install [Poetry](https://python-poetry.org/docs/#installation)
-3. Run `poetry install` to install dependencies into a virtual environment
+
+### Pip
+
+1. Run `pip install -r requirements.txt` to install dependencies
+
+### Poetry
+
+1. Install [Poetry](https://python-poetry.org/docs/#installation)
+1. Run `poetry install` to install dependencies into a virtual environment
 
 ## Usage
 
