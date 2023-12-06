@@ -115,31 +115,20 @@ class OrderSigner(Signer):
         side: str,
         signer_address: str,
     ) -> dict:
-        in_amount = convert_to_base_unit(
-            token_amount=float(size), decimals=in_token["decimals"]
+        in_amount = self.__calculate_in_amount(
+            size=size, price=price, side=side, decimals=in_token["decimals"]
+        )
+
+        out_amount = self.__calculate_out_amount(
+            size=size, price=price, side=side, decimals=out_token["decimals"]
         )
         nonce = random.randint(0, 2**32 - 1)
 
         deadline = datetime.datetime.now() + datetime.timedelta(days=90)
         epoch_deadline = int(deadline.timestamp())
 
-        if side == "buy":
-            # Price is in 'out' token per unit of 'in' token
-            output_amount = convert_to_base_unit(
-                token_amount=(float(size) * float(price)),
-                decimals=out_token["decimals"],
-            )
-        elif side == "sell":
-            # Price is in 'in' token per unit of 'out' token, invert it
-            output_amount = convert_to_base_unit(
-                token_amount=(float(size) / float(price)),
-                decimals=out_token["decimals"],
-            )
-        else:
-            raise ErrInvalidSide("Invalid side value. Must be 'buy' or 'sell'.")
-
         return {
-            "permitted": {"token": in_token["address"], "amount": in_amount},
+            "permitted": {"token": in_token["address"], "amount": str(in_amount)},
             "spender": "0x21Da9737764527e75C17F1AB26Cb668b66dEE0a0",
             "nonce": nonce,
             "deadline": epoch_deadline,
@@ -154,11 +143,11 @@ class OrderSigner(Signer):
                 },
                 "exclusiveFiller": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
                 "exclusivityOverrideBps": 0,
-                "input": {"token": in_token["address"], "amount": in_amount},
+                "input": {"token": in_token["address"], "amount": str(in_amount)},
                 "outputs": [
                     {
                         "token": out_token["address"],
-                        "amount": output_amount,
+                        "amount": str(out_amount),
                         "recipient": signer_address,
                     }
                 ],
@@ -197,3 +186,31 @@ class OrderSigner(Signer):
             raise ErrInvalidToken(f"Invalid 'out' token symbol: {out_token_symbol}.")
 
         return in_token, out_token
+
+    def __calculate_in_amount(
+        self, *, size: str, price: str, side: str, decimals: int
+    ) -> int:
+        if side == "buy":
+            return convert_to_base_unit(
+                token_amount=(float(size) * float(price)),
+                decimals=decimals,
+            )
+        else:
+            return convert_to_base_unit(
+                token_amount=float(size),
+                decimals=decimals,
+            )
+
+    def __calculate_out_amount(
+        self, *, size: str, price: str, side: str, decimals: int
+    ) -> int:
+        if side == "sell":
+            return convert_to_base_unit(
+                token_amount=(float(size) * float(price)),
+                decimals=decimals,
+            )
+        else:
+            return convert_to_base_unit(
+                token_amount=float(size),
+                decimals=decimals,
+            )
