@@ -17,7 +17,10 @@ from pythonsdk.types import (
 class OrderBookSDK:
     def __init__(self, base_url: str, api_key: str) -> None:
         self.base_url = base_url
-        self.headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
+        self.headers = {
+            "X-API-KEY": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
 
     def _send_request(
         self,
@@ -51,10 +54,7 @@ class OrderBookSDK:
         return self._send_request(
             method="POST",
             endpoint="api/v1/order",
-            data=order_input,
-            custom_headers=gen_create_order_headers(
-                signature=signature, message_data=message_data
-            ),
+            data={**order_input, "eip712Sig": signature, "eip712MsgData": message_data},
         )
 
     def cancel_order_by_id(self, order_id: str) -> CancelOrderResponse:

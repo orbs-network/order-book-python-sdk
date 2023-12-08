@@ -24,7 +24,7 @@ class OrderSigner(Signer):
 
         self.__account = Account.from_key(private_key)
 
-    def prepare_and_sign_order(self, order: CreateOrderInput) -> (str, str):
+    def prepare_and_sign_order(self, order: CreateOrderInput) -> (str, dict):
         """Prepare EIP-712 message and sign it.
 
         Args:
@@ -57,7 +57,7 @@ class OrderSigner(Signer):
 
         signature = self.sign_message(signable_message, self.__account.key)
 
-        return signature.signature.hex(), json.dumps(message_data)
+        return signature.signature.hex(), message_data
 
     def _construct_domain_data(self) -> Dict[str, Any]:
         return {
