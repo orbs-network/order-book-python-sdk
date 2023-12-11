@@ -1,6 +1,7 @@
 import datetime
 import json
 import random
+from importlib import resources
 from typing import Any, Dict, Tuple, TypedDict
 
 from eth_account import Account
@@ -173,7 +174,7 @@ class OrderSigner(Signer):
             token_parts if side == "sell" else token_parts[::-1]
         )
 
-        with open("pythonsdk/supportedTokens.json", encoding="utf-8") as f:
+        with resources.open_text("pythonsdk", "supportedTokens.json") as f:
             tokens = json.load(f)
 
         in_token = tokens.get(in_token_symbol)
