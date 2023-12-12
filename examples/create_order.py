@@ -3,9 +3,7 @@
 import asyncio
 import os
 
-from pythonsdk.client import OrderBookSDK
-from pythonsdk.order_signer import OrderSigner
-from pythonsdk.types import CreateOrderInput
+from orbs_orderbook import CreateOrderInput, OrderBookSDK, OrderSigner
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost")
 

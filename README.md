@@ -7,7 +7,7 @@ This Python SDK allows you to query the Orb's order book and place orders.
 ## Folder structure
 
 - `examples`: Example scripts
-- `pythonsdk`: The Python SDK source code
+- `orbs_orderbook`: The Python SDK source code
 
 ## Development
 
@@ -29,3 +29,7 @@ This Python SDK allows you to query the Orb's order book and place orders.
 ### Creating an order
 
 See `examples/create_order.py`.
+
+### Cancelling orders
+
+See `examples/cancel_order.py`.

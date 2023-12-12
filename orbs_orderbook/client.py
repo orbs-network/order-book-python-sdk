@@ -3,14 +3,13 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
-from pythonsdk.types import (
+from orbs_orderbook.types import (
     CancelOrderResponse,
     CreateOrderInput,
     MarketDepthResponse,
     OrderResponse,
     OrdersForUserResponse,
     SymbolResponse,
-    gen_create_order_headers,
 )
 
 
