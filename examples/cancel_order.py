@@ -5,13 +5,13 @@ Includes cancelling by client order ID and cancelling all orders
 import asyncio
 import os
 
-from pythonsdk import OrderBookSDK
+from orbs_orderbook import OrderBookSDK
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost")
 
 
 async def main():
-    client = OrderBookSDK(base_url=BASE_URL, api_key="abc123")
+    client = OrderBookSDK(base_url=BASE_URL, api_key="38052ba1012aa665458cf2d28b9d057d")
 
     # Cancel by order ID
     res = client.cancel_order_by_id(order_id="546d10cf-e5ea-4ff7-82ce-6dd1c8cb8c6b")

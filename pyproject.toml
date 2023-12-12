@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "orbs-orderbook-sdk"
-version = "0.1.2"
+version = "0.2.0"
 description = "Python SDK for the Orbs order book"
 authors = ["Luke Rogerson <contact@lukerogerson.me>"]
 readme = "README.md"
 packages = [
-    { include = "pythonsdk" },
+    { include = "orbs_orderbook" },
 ]
-include = ["pythonsdk/supportedTokens.json"]
+include = ["orbs_orderbook/supportedTokens.json"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -6,10 +6,14 @@ from typing import Any, Dict, Tuple, TypedDict
 
 from eth_account import Account
 
-from pythonsdk.exceptions import ErrInvalidSide, ErrInvalidSymbolFormat, ErrInvalidToken
-from pythonsdk.signer import Signer
-from pythonsdk.types import CreateOrderInput
-from pythonsdk.utils import convert_to_base_unit
+from orbs_orderbook.exceptions import (
+    ErrInvalidSide,
+    ErrInvalidSymbolFormat,
+    ErrInvalidToken,
+)
+from orbs_orderbook.signer import Signer
+from orbs_orderbook.types import CreateOrderInput
+from orbs_orderbook.utils import convert_to_base_unit
 
 
 class Token(TypedDict):
@@ -174,7 +178,7 @@ class OrderSigner(Signer):
             token_parts if side == "sell" else token_parts[::-1]
         )
 
-        with resources.open_text("pythonsdk", "supportedTokens.json") as f:
+        with resources.open_text("orbs_orderbook", "supportedTokens.json") as f:
             tokens = json.load(f)
 
         in_token = tokens.get(in_token_symbol)

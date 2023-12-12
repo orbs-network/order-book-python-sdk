@@ -3,13 +3,13 @@
 import asyncio
 import os
 
-from pythonsdk import CreateOrderInput, OrderBookSDK, OrderSigner
+from orbs_orderbook import CreateOrderInput, OrderBookSDK, OrderSigner
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost")
 
 
 async def main():
-    client = OrderBookSDK(base_url=BASE_URL, api_key="abc123")
+    client = OrderBookSDK(base_url=BASE_URL, api_key="38052ba1012aa665458cf2d28b9d057d")
     signer = OrderSigner(
         private_key="0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     )

@@ -6,9 +6,7 @@ import random
 from eth_account import Account
 from eth_account.messages import encode_typed_data
 
-from pythonsdk.order_signer import OrderSigner
-from pythonsdk.types import CreateOrderInput
-from pythonsdk.utils import convert_to_base_unit
+from orbs_orderbook import CreateOrderInput, OrderSigner
 
 
 async def main():
