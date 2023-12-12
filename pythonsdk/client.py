@@ -10,7 +10,6 @@ from pythonsdk.types import (
     OrderResponse,
     OrdersForUserResponse,
     SymbolResponse,
-    gen_create_order_headers,
 )
 
 

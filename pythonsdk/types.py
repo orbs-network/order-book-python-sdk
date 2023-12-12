@@ -9,13 +9,6 @@ class CreateOrderInput(TypedDict):
     clientOrderId: str
 
 
-def gen_create_order_headers(*, signature: str, message_data: str):
-    return {
-        "X-API-SIGN": signature,
-        "X-API-EIP712-MSG": message_data,
-    }
-
-
 class OrderResponse(TypedDict):
     orderId: str
     clientOrderId: Optional[str]
