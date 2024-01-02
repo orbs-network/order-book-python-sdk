@@ -54,7 +54,7 @@ class OrderSigner(Signer):
         )
 
         signable_message = self.encode_typed_data(
-            primary_type="PermitWitnessTransferFrom",
+            primary_type="RePermitWitnessTransferFrom",
             domain_data=domain_data,
             message_types=message_types,
             message_data=message_data,
@@ -66,14 +66,14 @@ class OrderSigner(Signer):
 
     def _construct_domain_data(self) -> Dict[str, Any]:
         return {
-            "name": "Permit2",
+            "name": "RePermit",
             "chainId": 137,
             "verifyingContract": "0x000000000022d473030f116ddee9f6b43ac78ba3",
         }
 
     def _construct_message_types(self) -> dict:
         return {
-            "PermitWitnessTransferFrom": [
+            "RePermitWitnessTransferFrom": [
                 {"name": "permitted", "type": "TokenPermissions"},
                 {"name": "spender", "type": "address"},
                 {"name": "nonce", "type": "uint256"},
