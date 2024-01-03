@@ -11,13 +11,14 @@ BASE_URL = os.environ.get("BASE_URL", "http://localhost")
 async def main():
     client = OrderBookSDK(base_url=BASE_URL, api_key="38052ba1012aa665458cf2d28b9d057d")
     signer = OrderSigner(
-        private_key="0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        private_key="0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        sdk=client,
     )
 
     order_input = CreateOrderInput(
         price="2000",
         size="10",
-        symbol="ETH-USDC",
+        symbol="MATIC-USDC",
         side="buy",
         clientOrderId="550e8400-e29b-41d4-a716-446655440000",
     )
