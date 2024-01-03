@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
+from orbs_orderbook.exceptions import ErrUnauthorized
 from orbs_orderbook.types import (
     CancelOrderResponse,
     CreateOrderInput,
@@ -10,9 +11,8 @@ from orbs_orderbook.types import (
     OrderResponse,
     OrdersForUserResponse,
     SymbolResponse,
+    Token,
 )
-
-from orbs_orderbook.exceptions import ErrUnauthorized
 
 
 class OrderBookSDK:
@@ -24,7 +24,7 @@ class OrderBookSDK:
         }
         self.supported_tokens = self.__get_supported_tokens()
 
-    def __get_supported_tokens(self) -> Dict[str, str]:
+    def __get_supported_tokens(self) -> Dict[str, Token]:
         return self._send_request(method="GET", endpoint="api/v1/supported-tokens")[
             "tokens"
         ]
