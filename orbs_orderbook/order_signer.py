@@ -1,11 +1,10 @@
 import datetime
-import json
 import random
-from importlib import resources
 from typing import Any, Dict, Tuple, TypedDict
 
 from eth_account import Account
 
+from orbs_orderbook.client import OrderBookSDK
 from orbs_orderbook.exceptions import (
     ErrInvalidSide,
     ErrInvalidSymbolFormat,
@@ -23,11 +22,13 @@ class Token(TypedDict):
 
 class OrderSigner(Signer):
     __account: Account
+    __sdk: OrderBookSDK
 
-    def __init__(self, private_key: str):
+    def __init__(self, private_key: str, sdk: OrderBookSDK):
         super().__init__()
 
         self.__account = Account.from_key(private_key)
+        self.__sdk = sdk
 
     def prepare_and_sign_order(self, order: CreateOrderInput) -> (str, dict):
         """Prepare EIP-712 message and sign it.
@@ -37,6 +38,11 @@ class OrderSigner(Signer):
 
         Returns:
             Tuple of signature and EIP712 message data (needed for signature validation)
+
+        Raises:
+            - ErrInvalidSymbolFormat: Raised when symbol does not follow "TOKEN1-TOKEN2" format
+            - ErrInvalidSide: Raised when side is not "buy" or "sell"
+            - ErrInvalidToken: Raised when token is not supported
         """
         in_token, out_token = self.__get_token_details(
             symbol=order["symbol"], side=order["side"]
@@ -178,11 +184,8 @@ class OrderSigner(Signer):
             token_parts if side == "sell" else token_parts[::-1]
         )
 
-        with resources.open_text("orbs_orderbook", "supportedTokens.json") as f:
-            tokens = json.load(f)
-
-        in_token = tokens.get(in_token_symbol)
-        out_token = tokens.get(out_token_symbol)
+        in_token = self.__sdk.supported_tokens.get(in_token_symbol)
+        out_token = self.__sdk.supported_tokens.get(out_token_symbol)
 
         if not in_token:
             raise ErrInvalidToken(f"Invalid 'in' token symbol: {in_token_symbol}.")
