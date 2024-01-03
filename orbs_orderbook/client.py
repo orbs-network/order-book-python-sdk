@@ -12,6 +12,8 @@ from orbs_orderbook.types import (
     SymbolResponse,
 )
 
+from orbs_orderbook.exceptions import ErrUnauthorized
+
 
 class OrderBookSDK:
     def __init__(self, base_url: str, api_key: str) -> None:
@@ -20,6 +22,12 @@ class OrderBookSDK:
             "X-API-KEY": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
+        self.supported_tokens = self.__get_supported_tokens()
+
+    def __get_supported_tokens(self) -> Dict[str, str]:
+        return self._send_request(method="GET", endpoint="api/v1/supported-tokens")[
+            "tokens"
+        ]
 
     def _send_request(
         self,
@@ -41,6 +49,9 @@ class OrderBookSDK:
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as err:
+            if err.response.status_code == 401:
+                raise ErrUnauthorized("Invalid API key") from err
+
             return {
                 "error": err.response.reason,
                 "status_code": err.response.status_code,
