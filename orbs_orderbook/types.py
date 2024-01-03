@@ -1,4 +1,4 @@
-from typing import TypedDict, List, Optional
+from typing import List, Optional, TypedDict
 
 
 class CreateOrderInput(TypedDict):
@@ -46,3 +46,8 @@ class OrdersForUserResponse(TypedDict):
     pageSize: int
     total: int
     totalPages: int
+
+
+class Token(TypedDict):
+    address: str
+    decimals: int

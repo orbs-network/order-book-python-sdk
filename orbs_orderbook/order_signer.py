@@ -1,6 +1,7 @@
 import datetime
 import random
-from typing import Any, Dict, Tuple, TypedDict
+from decimal import Decimal
+from typing import Any, Dict, Tuple
 
 from eth_account import Account
 
@@ -11,13 +12,8 @@ from orbs_orderbook.exceptions import (
     ErrInvalidToken,
 )
 from orbs_orderbook.signer import Signer
-from orbs_orderbook.types import CreateOrderInput
+from orbs_orderbook.types import CreateOrderInput, Token
 from orbs_orderbook.utils import convert_to_base_unit
-
-
-class Token(TypedDict):
-    address: str
-    decimals: int
 
 
 class OrderSigner(Signer):
@@ -126,11 +122,11 @@ class OrderSigner(Signer):
         side: str,
         signer_address: str,
     ) -> dict:
-        in_amount = self.__calculate_in_amount(
+        in_amount = self._calculate_in_amount(
             size=size, price=price, side=side, decimals=in_token["decimals"]
         )
 
-        out_amount = self.__calculate_out_amount(
+        out_amount = self._calculate_out_amount(
             size=size, price=price, side=side, decimals=out_token["decimals"]
         )
         nonce = random.randint(0, 2**32 - 1)
@@ -195,30 +191,30 @@ class OrderSigner(Signer):
 
         return in_token, out_token
 
-    def __calculate_in_amount(
+    def _calculate_in_amount(
         self, *, size: str, price: str, side: str, decimals: int
     ) -> int:
         if side == "buy":
             return convert_to_base_unit(
-                token_amount=(float(size) * float(price)),
+                token_amount=Decimal(size) * Decimal(price),
                 decimals=decimals,
             )
         else:
             return convert_to_base_unit(
-                token_amount=float(size),
+                token_amount=Decimal(size),
                 decimals=decimals,
             )
 
-    def __calculate_out_amount(
+    def _calculate_out_amount(
         self, *, size: str, price: str, side: str, decimals: int
     ) -> int:
         if side == "sell":
             return convert_to_base_unit(
-                token_amount=(float(size) * float(price)),
+                token_amount=Decimal(size) * Decimal(price),
                 decimals=decimals,
             )
         else:
             return convert_to_base_unit(
-                token_amount=float(size),
+                token_amount=Decimal(size),
                 decimals=decimals,
             )
