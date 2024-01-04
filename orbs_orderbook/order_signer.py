@@ -7,6 +7,7 @@ from eth_account import Account
 
 from orbs_orderbook.client import OrderBookSDK
 from orbs_orderbook.exceptions import (
+    ErrDecimalPlaces,
     ErrInvalidSide,
     ErrInvalidSymbolFormat,
     ErrInvalidToken,
@@ -122,12 +123,17 @@ class OrderSigner(Signer):
         side: str,
         signer_address: str,
     ) -> dict:
+        price_dec = Decimal(price)
+        size_dec = Decimal(size)
+
+        self._check_decimal_places(price_dec)
+
         in_amount = self._calculate_in_amount(
-            size=size, price=price, side=side, decimals=in_token["decimals"]
+            size=size_dec, price=price_dec, side=side, decimals=in_token["decimals"]
         )
 
         out_amount = self._calculate_out_amount(
-            size=size, price=price, side=side, decimals=out_token["decimals"]
+            size=size_dec, price=price_dec, side=side, decimals=out_token["decimals"]
         )
         nonce = random.randint(0, 2**32 - 1)
 
@@ -192,29 +198,35 @@ class OrderSigner(Signer):
         return in_token, out_token
 
     def _calculate_in_amount(
-        self, *, size: str, price: str, side: str, decimals: int
+        self, *, size: Decimal, price: Decimal, side: str, decimals: int
     ) -> int:
         if side == "buy":
             return convert_to_base_unit(
-                token_amount=Decimal(size) * Decimal(price),
+                token_amount=size * price,
                 decimals=decimals,
             )
         else:
             return convert_to_base_unit(
-                token_amount=Decimal(size),
+                token_amount=size,
                 decimals=decimals,
             )
 
     def _calculate_out_amount(
-        self, *, size: str, price: str, side: str, decimals: int
+        self, *, size: Decimal, price: Decimal, side: str, decimals: int
     ) -> int:
         if side == "sell":
             return convert_to_base_unit(
-                token_amount=Decimal(size) * Decimal(price),
+                token_amount=size * price,
                 decimals=decimals,
             )
         else:
             return convert_to_base_unit(
-                token_amount=Decimal(size),
+                token_amount=size,
                 decimals=decimals,
             )
+
+    def _check_decimal_places(self, price: Decimal) -> None:
+        decimal_tuple = price.as_tuple()
+        decimal_places = max(0, -decimal_tuple.exponent)
+        if decimal_places > 8:
+            raise ErrDecimalPlaces(f"Price has more than 8 decimal places: {price}")
