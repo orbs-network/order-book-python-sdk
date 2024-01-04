@@ -16,10 +16,10 @@ async def main():
     )
 
     order_input = CreateOrderInput(
-        price="2000",
-        size="10",
+        price="0.86500000",
+        size="40",
         symbol="MATIC-USDC",
-        side="buy",
+        side="sell",
         clientOrderId="550e8400-e29b-41d4-a716-446655440000",
     )
 

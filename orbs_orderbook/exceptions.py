@@ -16,3 +16,7 @@ class ErrInvalidToken(Error):
 
 class ErrInvalidSide(Error):
     """Raised when the provided side is invalid."""
+
+
+class ErrDecimalPlaces(Error):
+    """Raised when the provided value has too many decimal places."""
