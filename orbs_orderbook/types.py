@@ -1,4 +1,4 @@
-from typing import List, Optional, TypedDict
+from typing import Dict, List, Optional, TypedDict
 
 
 class CreateOrderInput(TypedDict):
@@ -51,3 +51,7 @@ class OrdersForUserResponse(TypedDict):
 class Token(TypedDict):
     address: str
     decimals: int
+
+
+class SupportedTokensResponse(TypedDict):
+    tokens: Dict[str, Token]
