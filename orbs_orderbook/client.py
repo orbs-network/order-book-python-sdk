@@ -10,8 +10,8 @@ from orbs_orderbook.types import (
     MarketDepthResponse,
     OrderResponse,
     OrdersForUserResponse,
+    SupportedTokensResponse,
     SymbolResponse,
-    Token,
 )
 
 
@@ -22,12 +22,7 @@ class OrderBookSDK:
             "X-API-KEY": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
-        self.supported_tokens = self.__get_supported_tokens()
-
-    def __get_supported_tokens(self) -> Dict[str, Token]:
-        return self._send_request(method="GET", endpoint="api/v1/supported-tokens")[
-            "tokens"
-        ]
+        self.supported_tokens = self.get_supported_tokens()["tokens"]
 
     def _send_request(
         self,
@@ -81,6 +76,9 @@ class OrderBookSDK:
     def get_symbols(self) -> List[SymbolResponse]:
         return self._send_request(method="GET", endpoint="api/v1/symbols")
 
+    def get_supported_tokens(self) -> SupportedTokensResponse:
+        return self._send_request(method="GET", endpoint="api/v1/supported-tokens")
+
     def get_order_by_id(self, order_id: str) -> OrderResponse:
         return self._send_request(method="GET", endpoint=f"api/v1/order/{order_id}")
 
@@ -98,5 +96,14 @@ class OrderBookSDK:
         return self._send_request(
             method="GET",
             endpoint="api/v1/orders",
+            data={"page": page, "pageSize": page_size},
+        )
+
+    def get_filled_orders_for_user(
+        self, page: int, page_size: int
+    ) -> OrdersForUserResponse:
+        return self._send_request(
+            method="GET",
+            endpoint="api/v1/fills",
             data={"page": page, "pageSize": page_size},
         )
