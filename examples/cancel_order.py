@@ -14,12 +14,12 @@ async def main():
     client = OrderBookSDK(base_url=BASE_URL, api_key="38052ba1012aa665458cf2d28b9d057d")
 
     # Cancel by order ID
-    res = client.cancel_order_by_id(order_id="546d10cf-e5ea-4ff7-82ce-6dd1c8cb8c6b")
+    res = client.cancel_order_by_id(order_id="f8e17e12-ffa6-486c-8ba2-8f2fe6fe638f")
     print("Cancel by order ID response:", res)
 
     # Cancel by client order ID
     res = client.cancel_order_by_client_id(
-        client_order_id="85f9b615-7f23-4bfb-be4b-9dcb0bde33b7"
+        client_order_id="550e8400-e29b-41d4-a716-446655440000"
     )
     print("Cancel by client order ID response:", res)
 
