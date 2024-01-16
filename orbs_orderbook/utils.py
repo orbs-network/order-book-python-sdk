@@ -1,5 +1,8 @@
 from decimal import Decimal
+
 from web3 import Web3
+
+from orbs_orderbook.types import Base
 
 
 def hash_string(value: str):
@@ -16,3 +19,9 @@ def convert_to_base_unit(*, token_amount: Decimal, decimals: int):
     """
     multiplier = Decimal(10) ** decimals
     return int(token_amount * multiplier)
+
+
+def dataclass_serializer(obj):
+    if isinstance(obj, Base):
+        return obj.to_camelcase_dict()
+    raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")

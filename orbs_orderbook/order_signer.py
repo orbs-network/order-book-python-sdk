@@ -13,7 +13,7 @@ from orbs_orderbook.exceptions import (
     ErrInvalidToken,
 )
 from orbs_orderbook.signer import Signer
-from orbs_orderbook.types import CreateOrderInput, Token
+from orbs_orderbook.types import CreateOrderInput, EIP712Message, Token
 from orbs_orderbook.utils import convert_to_base_unit
 
 
@@ -42,7 +42,7 @@ class OrderSigner(Signer):
             - ErrInvalidToken: Raised when token is not supported
         """
         in_token, out_token = self.__get_token_details(
-            symbol=order["symbol"], side=order["side"]
+            symbol=order.symbol, side=order.side
         )
 
         domain_data = self._construct_domain_data()
@@ -50,9 +50,9 @@ class OrderSigner(Signer):
         message_data = self._construct_message_data(
             in_token=in_token,
             out_token=out_token,
-            size=order["size"],
-            price=order["price"],
-            side=order["side"],
+            size=order.size,
+            price=order.price,
+            side=order.side,
             signer_address=self.__account.address,
         )
 
@@ -64,17 +64,22 @@ class OrderSigner(Signer):
         )
 
         signature = self.sign_message(signable_message, self.__account.key)
+        eip_712_msg = EIP712Message(
+            domain_separator=domain_data,
+            message_types=message_types,
+            message_data=message_data,
+        )
 
-        return signature.signature.hex(), message_data
+        return signature.signature.hex(), eip_712_msg
 
-    def _construct_domain_data(self) -> Dict[str, Any]:
+    def _construct_domain_data(self) -> Dict[str, str]:
         return {
             "name": "RePermit",
             "chainId": 137,
             "verifyingContract": "0x000000000022d473030f116ddee9f6b43ac78ba3",
         }
 
-    def _construct_message_types(self) -> dict:
+    def _construct_message_types(self) -> Dict[str, Any]:
         return {
             "RePermitWitnessTransferFrom": [
                 {"name": "permitted", "type": "TokenPermissions"},
@@ -122,18 +127,18 @@ class OrderSigner(Signer):
         price: str,
         side: str,
         signer_address: str,
-    ) -> dict:
+    ) -> Dict[str, Any]:
         price_dec = Decimal(price)
         size_dec = Decimal(size)
 
         self._check_decimal_places(price_dec)
 
         in_amount = self._calculate_in_amount(
-            size=size_dec, price=price_dec, side=side, decimals=in_token["decimals"]
+            size=size_dec, price=price_dec, side=side, decimals=in_token.decimals
         )
 
         out_amount = self._calculate_out_amount(
-            size=size_dec, price=price_dec, side=side, decimals=out_token["decimals"]
+            size=size_dec, price=price_dec, side=side, decimals=out_token.decimals
         )
         nonce = random.randint(0, 2**32 - 1)
 
@@ -141,7 +146,7 @@ class OrderSigner(Signer):
         epoch_deadline = int(deadline.timestamp())
 
         return {
-            "permitted": {"token": in_token["address"], "amount": str(in_amount)},
+            "permitted": {"token": in_token.address, "amount": str(in_amount)},
             "spender": "0x21Da9737764527e75C17F1AB26Cb668b66dEE0a0",
             "nonce": nonce,
             "deadline": epoch_deadline,
@@ -156,10 +161,10 @@ class OrderSigner(Signer):
                 },
                 "exclusiveFiller": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
                 "exclusivityOverrideBps": 0,
-                "input": {"token": in_token["address"], "amount": str(in_amount)},
+                "input": {"token": in_token.address, "amount": str(in_amount)},
                 "outputs": [
                     {
-                        "token": out_token["address"],
+                        "token": out_token.address,
                         "amount": str(out_amount),
                         "recipient": signer_address,
                     }
@@ -186,16 +191,15 @@ class OrderSigner(Signer):
             token_parts if side == "sell" else token_parts[::-1]
         )
 
-        in_token = self.__sdk.supported_tokens.get(in_token_symbol)
-        out_token = self.__sdk.supported_tokens.get(out_token_symbol)
-
-        if not in_token:
+        in_token_dict = self.__sdk.supported_tokens.get(in_token_symbol)
+        if not in_token_dict:
             raise ErrInvalidToken(f"Invalid 'in' token symbol: {in_token_symbol}.")
 
-        if not out_token:
+        out_token_dict = self.__sdk.supported_tokens.get(out_token_symbol)
+        if not out_token_dict:
             raise ErrInvalidToken(f"Invalid 'out' token symbol: {out_token_symbol}.")
 
-        return in_token, out_token
+        return Token(**in_token_dict), Token(**out_token_dict)
 
     def _calculate_in_amount(
         self, *, size: Decimal, price: Decimal, side: str, decimals: int

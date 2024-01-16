@@ -20,15 +20,15 @@ async def main():
         size="40",
         symbol="MATIC-USDC",
         side="sell",
-        clientOrderId="550e8400-e29b-41d4-a716-446655440000",
+        client_order_id="550e8400-e29b-41d4-a716-446655440000",
     )
 
-    signature, message_data = signer.prepare_and_sign_order(order_input)
+    signature, message = signer.prepare_and_sign_order(order_input)
 
     res = client.create_order(
         order_input=order_input,
         signature=signature,
-        message_data=message_data,
+        message=message,
     )
 
     print(f"Create order response: {res}")

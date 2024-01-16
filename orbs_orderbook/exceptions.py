@@ -6,6 +6,15 @@ class ErrUnauthorized(Error):
     """Raised when the provided API key is invalid."""
 
 
+class ErrApiRequest(Error):
+    """Raised when an API request fails"""
+
+    def __init__(self, status_code, message):
+        self.status_code = status_code
+        self.message = message
+        super().__init__(f"HTTP Error {status_code}: {message}")
+
+
 class ErrInvalidSymbolFormat(Error):
     """Raised when the provided symbol is invalid."""
 
