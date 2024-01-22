@@ -23,6 +23,7 @@ async def main():
         client_order_id="550e8400-e29b-41d4-a716-446655440000",
     )
 
+    # You may specify a custom signature expiration time (`deadline`). If not specified, the default is 1 day.
     signature, message = signer.prepare_and_sign_order(order_input)
 
     res = client.create_order(

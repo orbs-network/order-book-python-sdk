@@ -1,5 +1,5 @@
-import datetime
 import random
+from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Any, Dict, Tuple
 
@@ -16,6 +16,8 @@ from orbs_orderbook.signer import Signer
 from orbs_orderbook.types import CreateOrderInput, EIP712Message, Token
 from orbs_orderbook.utils import convert_to_base_unit
 
+DEFAULT_DEADLINE = datetime.now() + timedelta(days=1)
+
 
 class OrderSigner(Signer):
     __account: Account
@@ -27,11 +29,14 @@ class OrderSigner(Signer):
         self.__account = Account.from_key(private_key)
         self.__sdk = sdk
 
-    def prepare_and_sign_order(self, order: CreateOrderInput) -> (str, dict):
+    def prepare_and_sign_order(
+        self, order: CreateOrderInput, deadline: datetime = DEFAULT_DEADLINE
+    ) -> (str, dict):
         """Prepare EIP-712 message and sign it.
 
         Args:
             order: Order to sign.
+            deadline (optional): How long the order signature is valid for.
 
         Returns:
             Tuple of signature and EIP712 message data (needed for signature validation)
@@ -54,6 +59,7 @@ class OrderSigner(Signer):
             price=order.price,
             side=order.side,
             signer_address=self.__account.address,
+            deadline=deadline,
         )
 
         signable_message = self.encode_typed_data(
@@ -75,8 +81,8 @@ class OrderSigner(Signer):
     def _construct_domain_data(self) -> Dict[str, str]:
         return {
             "name": "RePermit",
-            "chainId": 137,
-            "verifyingContract": "0x000000000022d473030f116ddee9f6b43ac78ba3",
+            "chainId": "137",
+            "verifyingContract": "0x4d415B58EA43988FfF7f50A3475718b0858fE0f1",
         }
 
     def _construct_message_types(self) -> Dict[str, Any]:
@@ -127,6 +133,7 @@ class OrderSigner(Signer):
         price: str,
         side: str,
         signer_address: str,
+        deadline: datetime,
     ) -> Dict[str, Any]:
         price_dec = Decimal(price)
         size_dec = Decimal(size)
@@ -140,27 +147,26 @@ class OrderSigner(Signer):
         out_amount = self._calculate_out_amount(
             size=size_dec, price=price_dec, side=side, decimals=out_token.decimals
         )
-        nonce = random.randint(0, 2**32 - 1)
+        nonce = str(random.randint(0, 2**32 - 1))
 
-        deadline = datetime.datetime.now() + datetime.timedelta(days=90)
-        epoch_deadline = int(deadline.timestamp())
+        epoch_deadline = str(int(deadline.timestamp()))
 
         return {
             "permitted": {"token": in_token.address, "amount": str(in_amount)},
-            "spender": "0x21Da9737764527e75C17F1AB26Cb668b66dEE0a0",
+            "spender": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
             "nonce": nonce,
             "deadline": epoch_deadline,
             "witness": {
                 "info": {
-                    "reactor": "0x21Da9737764527e75C17F1AB26Cb668b66dEE0a0",
-                    "swapper": "0xE3682CCecefBb3C3fe524BbFF1598B2BBaC0d6E3",
+                    "reactor": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
+                    "swapper": signer_address,
                     "nonce": nonce,
                     "deadline": epoch_deadline,
-                    "additionalValidationContract": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
+                    "additionalValidationContract": "0x0000000000000000000000000000000000000000",
                     "additionalValidationData": "0x",
                 },
                 "exclusiveFiller": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
-                "exclusivityOverrideBps": 0,
+                "exclusivityOverrideBps": "0",
                 "input": {"token": in_token.address, "amount": str(in_amount)},
                 "outputs": [
                     {

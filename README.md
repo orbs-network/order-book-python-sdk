@@ -12,9 +12,7 @@ The SDK [is available on PyPI](https://pypi.org/project/orbs-orderbook-sdk/) and
 pip install orbs-orderbook-sdk
 ```
 
-You will need to request an API key from the Orbs team, as well as providing us with your desired Ethereum public key corresponding to the private key you will use to sign orders.
-
-We require the 64 bytes long (128 hex characters) public key, including the `0x` prefix.
+You will need to request an API key from the Orbs team, and provide us with your Externally Owned Account (EOA) wallet address (NOT the private key).
 
 ## Usage
 
