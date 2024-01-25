@@ -71,8 +71,6 @@ class OrderSigner(Signer):
 
         signature = self.sign_message(signable_message, self.__account.key)
         eip_712_msg = EIP712Message(
-            domain_separator=domain_data,
-            message_types=message_types,
             message_data=message_data,
         )
 

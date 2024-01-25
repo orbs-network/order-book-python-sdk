@@ -3,8 +3,6 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
-import dataclasses
-
 from orbs_orderbook.exceptions import ErrApiRequest, ErrUnauthorized
 from orbs_orderbook.types import (
     CancelOrderResponse,
@@ -14,11 +12,10 @@ from orbs_orderbook.types import (
     MarketDepthResponse,
     OrderResponse,
     OrdersForUserResponse,
-    _parse_to_class,
     SupportedTokensResponse,
     SymbolResponse,
+    _parse_to_class,
 )
-
 from orbs_orderbook.utils import dataclass_serializer
 
 
@@ -76,9 +73,7 @@ class OrderBookSDK:
             data={
                 **order_input.to_camelcase_dict(),
                 "eip712Sig": signature,
-                "eip712Domain": message.domain_separator,
                 "eip712Msg": message.message_data,
-                "eip712MsgTypes": message.message_types,
             },
         )
         return _parse_to_class(CreateOrderResponse, res)

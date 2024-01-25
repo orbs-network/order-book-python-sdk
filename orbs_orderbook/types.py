@@ -47,8 +47,6 @@ class CreateOrderInput(Base):
 
 @dataclass
 class EIP712Message(Base):
-    domain_separator: Dict[str, str]
-    message_types: Dict[str, Any]
     message_data: Dict[str, Any]
 
 

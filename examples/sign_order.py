@@ -1,31 +1,31 @@
 """Sign an order"""
 
 import asyncio
-import random
+import os
 
-from eth_account import Account
-from eth_account.messages import encode_typed_data
+from orbs_orderbook import CreateOrderInput, OrderBookSDK, OrderSigner
 
-from orbs_orderbook import CreateOrderInput, OrderSigner
+BASE_URL = os.environ.get("BASE_URL", "http://localhost")
 
 
 async def main():
     pk = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
-    order_signer = OrderSigner(pk)
+    sdk = OrderBookSDK(base_url=BASE_URL, api_key="ox9xiaYHSzkH7yNKpEPppAoZm33Yurbd")
+    order_signer = OrderSigner(pk, sdk)
 
-    signature, message_data_str = order_signer.prepare_and_sign_order(
+    signature, message = order_signer.prepare_and_sign_order(
         CreateOrderInput(
-            price="20000",
-            size="20",
-            symbol="WBTC-USDC",
+            price="0.86500000",
+            size="40",
+            symbol="MATIC-USDC",
             side="sell",
-            clientOrderId="a677273e-12de-4acc-a4f8-de7fb5b86e37",
+            client_order_id="550e8400-e29b-41d4-a716-446655440000",
         )
     )
 
     print("signature: ", signature)
-    print("message_data_str: ", message_data_str)
+    print("message: ", message)
 
 
 if __name__ == "__main__":
