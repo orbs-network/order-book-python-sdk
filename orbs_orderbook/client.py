@@ -29,7 +29,17 @@ class OrderBookSDK:
             "X-API-KEY": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
-        self.supported_tokens = self.get_supported_tokens().tokens
+        # self.supported_tokens = self.get_supported_tokens().tokens
+        self.supported_tokens = {
+            "TOKEN1": {
+                "address": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+                "decimals": 18,
+            },
+            "TOKEN2": {
+                "address": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+                "decimals": 18,
+            },
+        }
 
     def _send_request(
         self,

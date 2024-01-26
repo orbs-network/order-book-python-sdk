@@ -7,7 +7,6 @@ readme = "README.md"
 packages = [
     { include = "orbs_orderbook" },
 ]
-include = ["orbs_orderbook/supportedTokens.json"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
