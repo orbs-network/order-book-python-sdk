@@ -69,6 +69,7 @@ class OrderResponse(Base):
     filled_size: str
     side: str
     timestamp: Optional[str]
+    cancelled: bool
 
 
 @dataclass

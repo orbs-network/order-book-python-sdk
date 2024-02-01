@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "orbs-orderbook-sdk"
-version = "0.7.0"
+version = "0.8.0"
 description = "Python SDK for the Orbs order book"
 authors = ["Luke Rogerson <contact@lukerogerson.me>"]
 readme = "README.md"

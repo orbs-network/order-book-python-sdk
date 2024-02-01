@@ -76,9 +76,7 @@ class OrderBookSDK:
             data={
                 **order_input.to_camelcase_dict(),
                 "eip712Sig": signature,
-                "eip712Domain": message.domain_separator,
                 "eip712Msg": message.message_data,
-                "eip712MsgTypes": message.message_types,
             },
         )
         return _parse_to_class(CreateOrderResponse, res)

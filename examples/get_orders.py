@@ -8,17 +8,18 @@ import os
 from orbs_orderbook import OrderBookSDK
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost")
+API_KEY = os.environ.get("API_KEY", "38052ba1012aa665458cf2d28b9d057d")
 
 
 async def main():
-    client = OrderBookSDK(base_url=BASE_URL, api_key="og4lpqQUILyciacspkFESHE1qrXIxpX1")
+    client = OrderBookSDK(base_url=BASE_URL, api_key=API_KEY)
 
     # Get single order by order ID
     order_id = "accfae6b-3a9e-4719-85f0-a34fbc16fb3b"
     client.get_order_by_id(order_id=order_id)
 
     # Get single order by client order ID
-    client_oid = "550e8400-e29b-41d4-a716-446655440000"
+    client_oid = "650e8400-e29b-41d4-a716-446655440000"
     client.get_order_by_client_id(client_order_id=client_oid)
 
     # Get all open orders (paginated)

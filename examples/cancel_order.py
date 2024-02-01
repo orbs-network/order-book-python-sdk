@@ -8,10 +8,11 @@ import os
 from orbs_orderbook import OrderBookSDK
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost")
+API_KEY = os.environ.get("API_KEY", "38052ba1012aa665458cf2d28b9d057d")
 
 
 async def main():
-    client = OrderBookSDK(base_url=BASE_URL, api_key="38052ba1012aa665458cf2d28b9d057d")
+    client = OrderBookSDK(base_url=BASE_URL, api_key=API_KEY)
 
     # Cancel by order ID
     res = client.cancel_order_by_id(order_id="f8e17e12-ffa6-486c-8ba2-8f2fe6fe638f")
