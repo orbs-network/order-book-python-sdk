@@ -81,8 +81,9 @@ class OrderSigner(Signer):
     def _construct_domain_data(self) -> Dict[str, str]:
         return {
             "name": "RePermit",
+            "version": "1",
             "chainId": "137",
-            "verifyingContract": "0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9",
+            "verifyingContract": "0x4d415B58EA43988FfF7f50A3475718b0858fE0f1",
         }
 
     def _construct_message_types(self) -> Dict[str, Any]:
@@ -93,6 +94,17 @@ class OrderSigner(Signer):
                 {"name": "nonce", "type": "uint256"},
                 {"name": "deadline", "type": "uint256"},
                 {"name": "witness", "type": "PartialOrder"},
+            ],
+            "TokenPermissions": [
+                {"name": "token", "type": "address"},
+                {"name": "amount", "type": "uint256"},
+            ],
+            "PartialOrder": [
+                {"name": "info", "type": "OrderInfo"},
+                {"name": "exclusiveFiller", "type": "address"},
+                {"name": "exclusivityOverrideBps", "type": "uint256"},
+                {"name": "input", "type": "PartialInput"},
+                {"name": "outputs", "type": "PartialOutput[]"},
             ],
             "OrderInfo": [
                 {"name": "reactor", "type": "address"},
@@ -106,21 +118,10 @@ class OrderSigner(Signer):
                 {"name": "token", "type": "address"},
                 {"name": "amount", "type": "uint256"},
             ],
-            "PartialOrder": [
-                {"name": "info", "type": "OrderInfo"},
-                {"name": "exclusiveFiller", "type": "address"},
-                {"name": "exclusivityOverrideBps", "type": "uint256"},
-                {"name": "input", "type": "PartialInput"},
-                {"name": "outputs", "type": "PartialOutput[]"},
-            ],
             "PartialOutput": [
                 {"name": "token", "type": "address"},
                 {"name": "amount", "type": "uint256"},
                 {"name": "recipient", "type": "address"},
-            ],
-            "TokenPermissions": [
-                {"name": "token", "type": "address"},
-                {"name": "amount", "type": "uint256"},
             ],
         }
 
@@ -153,36 +154,9 @@ class OrderSigner(Signer):
         # epoch_deadline = str(int(deadline.timestamp()))
         epoch_deadline = "1709071200"
 
-        # return {
-        #     "permitted": {"token": in_token.address, "amount": str(in_amount)},
-        #     "spender": "0xA34CAA99390bfF0347B9f07e45Cd7b1338C11D19",
-        #     "nonce": nonce,
-        #     "deadline": epoch_deadline,
-        #     "witness": {
-        #         "info": {
-        #             "reactor": "0xA34CAA99390bfF0347B9f07e45Cd7b1338C11D19",
-        #             "swapper": signer_address,
-        #             "nonce": nonce,
-        #             "deadline": epoch_deadline,
-        #             "additionalValidationContract": "0x0000000000000000000000000000000000000000",
-        #             "additionalValidationData": "0x",
-        #         },
-        #         "exclusiveFiller": "0xF62849F9A0B5Bf2913b396098F7c7019b51A820a",
-        #         "exclusivityOverrideBps": "0",
-        #         "input": {"token": in_token.address, "amount": str(in_amount)},
-        #         "outputs": [
-        # {
-        #     "token": out_token.address,
-        #     "amount": str(out_amount),
-        #     "recipient": signer_address,
-        # }
-        #         ],
-        #     },
-        # }
-
         return {
             "permitted": {"token": in_token.address, "amount": str(in_amount)},
-            "spender": "0xA34CAA99390bfF0347B9f07e45Cd7b1338C11D19",
+            "spender": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
             "nonce": "1000",
             "deadline": "1709071200",
             "witness": {
@@ -191,10 +165,10 @@ class OrderSigner(Signer):
                     "additionalValidationData": "0x",
                     "deadline": "1709071200",
                     "nonce": "1000",
-                    "reactor": "0xA34CAA99390bfF0347B9f07e45Cd7b1338C11D19",
+                    "reactor": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
                     "swapper": signer_address,
                 },
-                "exclusiveFiller": "0xF62849F9A0B5Bf2913b396098F7c7019b51A820a",
+                "exclusiveFiller": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
                 "exclusivityOverrideBps": "0",
                 "input": {"token": in_token.address, "amount": str(in_amount)},
                 "outputs": [
@@ -206,40 +180,6 @@ class OrderSigner(Signer):
                 ],
             },
         }
-
-        # THIS ONE WORKS
-        # return {
-        #     "deadline": "1709071200",
-        #     "nonce": "1000",
-        #     "permitted": {
-        #         "amount": "40000000000000000000",
-        #         "token": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-        #     },
-        #     "spender": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
-        #     "witness": {
-        #         "exclusiveFiller": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
-        #         "exclusivityOverrideBps": "0",
-        #         "info": {
-        #             "additionalValidationContract": "0x0000000000000000000000000000000000000000",
-        #             "additionalValidationData": "0x",
-        #             "deadline": "1709071200",
-        #             "nonce": "1000",
-        #             "reactor": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
-        #             "swapper": "0x8fd379246834eac74B8419FfdA202CF8051F7A03",
-        #         },
-        #         "input": {
-        #             "amount": "40000000000000000000",
-        #             "token": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-        #         },
-        #         "outputs": [
-        #             {
-        #                 "amount": "34600000",
-        #                 "recipient": "0x8fd379246834eac74B8419FfdA202CF8051F7A03",
-        #                 "token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
-        #             }
-        #         ],
-        #     },
-        # }
 
     def __get_token_details(self, *, symbol: str, side: str) -> Tuple[Token, Token]:
         if "-" not in symbol:
