@@ -16,8 +16,6 @@ from orbs_orderbook.signer import Signer
 from orbs_orderbook.types import CreateOrderInput, EIP712Message, Token
 from orbs_orderbook.utils import convert_to_base_unit
 
-DEFAULT_DEADLINE = datetime.now() + timedelta(days=1)
-
 
 class OrderSigner(Signer):
     __account: Account
@@ -30,7 +28,9 @@ class OrderSigner(Signer):
         self.__sdk = sdk
 
     def prepare_and_sign_order(
-        self, order: CreateOrderInput, deadline: datetime = DEFAULT_DEADLINE
+        self,
+        order: CreateOrderInput,
+        deadline: datetime = datetime.now() + timedelta(days=1),
     ) -> (str, dict):
         """Prepare EIP-712 message and sign it.
 
