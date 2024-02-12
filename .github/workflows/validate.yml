@@ -1,11 +1,11 @@
-name: Python Poetry CI
+name: Validate on PR
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
