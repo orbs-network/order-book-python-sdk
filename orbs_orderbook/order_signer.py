@@ -83,7 +83,7 @@ class OrderSigner(Signer):
             "name": "RePermit",
             "version": "1",
             "chainId": "137",
-            "verifyingContract": "0x4d415B58EA43988FfF7f50A3475718b0858fE0f1",
+            "verifyingContract": "0xBCafFd7936205c879EDa52293497BE88C3d02361",
         }
 
     def _construct_message_types(self) -> Dict[str, Any]:
