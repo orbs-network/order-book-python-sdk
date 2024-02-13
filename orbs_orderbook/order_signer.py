@@ -81,6 +81,7 @@ class OrderSigner(Signer):
     def _construct_domain_data(self) -> Dict[str, str]:
         return {
             "name": "RePermit",
+            "version": "1",
             "chainId": "137",
             "verifyingContract": "0x4d415B58EA43988FfF7f50A3475718b0858fE0f1",
         }
@@ -94,17 +95,6 @@ class OrderSigner(Signer):
                 {"name": "deadline", "type": "uint256"},
                 {"name": "witness", "type": "PartialOrder"},
             ],
-            "TokenPermissions": [
-                {"name": "token", "type": "address"},
-                {"name": "amount", "type": "uint256"},
-            ],
-            "PartialOrder": [
-                {"name": "info", "type": "OrderInfo"},
-                {"name": "exclusiveFiller", "type": "address"},
-                {"name": "exclusivityOverrideBps", "type": "uint256"},
-                {"name": "input", "type": "PartialInput"},
-                {"name": "outputs", "type": "PartialOutput[]"},
-            ],
             "OrderInfo": [
                 {"name": "reactor", "type": "address"},
                 {"name": "swapper", "type": "address"},
@@ -117,10 +107,21 @@ class OrderSigner(Signer):
                 {"name": "token", "type": "address"},
                 {"name": "amount", "type": "uint256"},
             ],
+            "PartialOrder": [
+                {"name": "info", "type": "OrderInfo"},
+                {"name": "exclusiveFiller", "type": "address"},
+                {"name": "exclusivityOverrideBps", "type": "uint256"},
+                {"name": "input", "type": "PartialInput"},
+                {"name": "outputs", "type": "PartialOutput[]"},
+            ],
             "PartialOutput": [
                 {"name": "token", "type": "address"},
                 {"name": "amount", "type": "uint256"},
                 {"name": "recipient", "type": "address"},
+            ],
+            "TokenPermissions": [
+                {"name": "token", "type": "address"},
+                {"name": "amount", "type": "uint256"},
             ],
         }
 
@@ -151,21 +152,24 @@ class OrderSigner(Signer):
 
         epoch_deadline = str(int(deadline.timestamp()))
 
+        reactor = "0x2Ee46d8d20020520d5266F3cAcc7c41e1AadD4C6"
+        executor = "0x896D9b9Eee18F6C88C5575B78247834029375575"
+
         return {
             "permitted": {"token": in_token.address, "amount": str(in_amount)},
-            "spender": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
+            "spender": reactor,
             "nonce": nonce,
             "deadline": epoch_deadline,
             "witness": {
                 "info": {
-                    "reactor": "0x0B94c1A3E11F8aaA25D27cAf8DD05818e6f2Ad97",
+                    "reactor": reactor,
                     "swapper": signer_address,
                     "nonce": nonce,
                     "deadline": epoch_deadline,
                     "additionalValidationContract": "0x0000000000000000000000000000000000000000",
                     "additionalValidationData": "0x",
                 },
-                "exclusiveFiller": "0x1a08D64Fb4a7D0b6DA5606A1e4619c147C3fB95e",
+                "exclusiveFiller": executor,
                 "exclusivityOverrideBps": "0",
                 "input": {"token": in_token.address, "amount": str(in_amount)},
                 "outputs": [
