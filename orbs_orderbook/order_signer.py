@@ -95,6 +95,17 @@ class OrderSigner(Signer):
                 {"name": "deadline", "type": "uint256"},
                 {"name": "witness", "type": "PartialOrder"},
             ],
+            "TokenPermissions": [
+                {"name": "token", "type": "address"},
+                {"name": "amount", "type": "uint256"},
+            ],
+            "PartialOrder": [
+                {"name": "info", "type": "OrderInfo"},
+                {"name": "exclusiveFiller", "type": "address"},
+                {"name": "exclusivityOverrideBps", "type": "uint256"},
+                {"name": "input", "type": "PartialInput"},
+                {"name": "outputs", "type": "PartialOutput[]"},
+            ],
             "OrderInfo": [
                 {"name": "reactor", "type": "address"},
                 {"name": "swapper", "type": "address"},
@@ -107,21 +118,10 @@ class OrderSigner(Signer):
                 {"name": "token", "type": "address"},
                 {"name": "amount", "type": "uint256"},
             ],
-            "PartialOrder": [
-                {"name": "info", "type": "OrderInfo"},
-                {"name": "exclusiveFiller", "type": "address"},
-                {"name": "exclusivityOverrideBps", "type": "uint256"},
-                {"name": "input", "type": "PartialInput"},
-                {"name": "outputs", "type": "PartialOutput[]"},
-            ],
             "PartialOutput": [
                 {"name": "token", "type": "address"},
                 {"name": "amount", "type": "uint256"},
                 {"name": "recipient", "type": "address"},
-            ],
-            "TokenPermissions": [
-                {"name": "token", "type": "address"},
-                {"name": "amount", "type": "uint256"},
             ],
         }
 
