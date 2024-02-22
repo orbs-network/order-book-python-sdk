@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from eth_account import Account
 
@@ -30,7 +30,7 @@ class OrderSigner(Signer):
     def prepare_and_sign_order(
         self,
         order: CreateOrderInput,
-        deadline: datetime = datetime.now() + timedelta(days=1),
+        deadline: Optional[datetime] = None,
     ) -> (str, dict):
         """Prepare EIP-712 message and sign it.
 
@@ -46,6 +46,9 @@ class OrderSigner(Signer):
             - ErrInvalidSide: Raised when side is not "buy" or "sell"
             - ErrInvalidToken: Raised when token is not supported
         """
+        if not deadline:
+            deadline = datetime.now() + timedelta(days=1)
+
         in_token, out_token = self.__get_token_details(
             symbol=order.symbol, side=order.side
         )
