@@ -7,6 +7,8 @@ import dataclasses
 
 from orbs_orderbook.exceptions import ErrApiRequest, ErrUnauthorized
 from orbs_orderbook.types import (
+    CreateMultipleOrdersInput,
+    CreateMultipleOrdersResponse,
     CancelOrderResponse,
     CreateOrderInput,
     CreateOrderResponse,
@@ -80,6 +82,25 @@ class OrderBookSDK:
             },
         )
         return _parse_to_class(CreateOrderResponse, res)
+
+    def create_multiple_orders(self, orders_input: CreateMultipleOrdersInput) -> str:
+        res = self._send_request(
+            method="POST",
+            endpoint="api/v1/orders",
+            data={
+                "symbol": orders_input.symbol,
+                "orders": [
+                    {
+                        **o.order.to_camelcase_dict(),
+                        "eip712Sig": o.signature,
+                        "eip712Msg": o.message.message_data,
+                    }
+                    for o in orders_input.orders
+                ],
+            },
+        )
+
+        return _parse_to_class(CreateMultipleOrdersResponse, res)
 
     def cancel_order_by_id(self, order_id: str) -> CancelOrderResponse:
         res = self._send_request(method="DELETE", endpoint=f"api/v1/order/{order_id}")
