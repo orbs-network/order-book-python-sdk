@@ -28,6 +28,10 @@ async def main():
     res = client.cancel_all_orders()
     print("Cancel all orders response:", res)
 
+    # Cancel all orders for a specific symbol
+    res = client.cancel_all_orders_by_symbol(symbol="MATIC-USDC")
+    print("Cancel all orders by symbol response:", res)
+
 
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()

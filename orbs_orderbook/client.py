@@ -115,6 +115,11 @@ class OrderBookSDK:
     def cancel_all_orders(self) -> Dict[str, Any]:
         return self._send_request(method="DELETE", endpoint="api/v1/orders")
 
+    def cancel_all_orders_by_symbol(self, symbol: str) -> Dict[str, Any]:
+        return self._send_request(
+            method="DELETE", endpoint=f"api/v1/orders?symbol={symbol}"
+        )
+
     def get_symbols(self) -> List[SymbolResponse]:
         return self._send_request(method="GET", endpoint="api/v1/symbols")
 
