@@ -83,7 +83,9 @@ class OrderBookSDK:
         )
         return _parse_to_class(CreateOrderResponse, res)
 
-    def create_multiple_orders(self, orders_input: CreateMultipleOrdersInput) -> str:
+    def create_multiple_orders(
+        self, orders_input: CreateMultipleOrdersInput
+    ) -> CreateMultipleOrdersResponse:
         res = self._send_request(
             method="POST",
             endpoint="api/v1/orders",
