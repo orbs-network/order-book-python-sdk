@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "orbs-orderbook-sdk"
-version = "0.9.1"
+version = "0.10.1"
 description = "Python SDK for the Orbs order book"
 authors = ["Luke Rogerson <contact@lukerogerson.me>"]
 readme = "README.md"
@@ -24,3 +24,6 @@ pytest-mock = "^3.12.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+Repository = "https://github.com/orbs-network/order-book-python-sdk"

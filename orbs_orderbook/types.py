@@ -73,6 +73,27 @@ class OrderResponse(Base):
 
 
 @dataclass
+class OrderWithSignature(Base):
+    order: CreateOrderInput
+    signature: str
+    message: EIP712Message
+
+
+@dataclass
+class CreateMultipleOrdersInput(Base):
+    symbol: str
+    orders: List[OrderWithSignature]
+
+
+@dataclass
+class CreateMultipleOrdersResponse(Base):
+    created: List[OrderResponse]
+    msg: str
+    status: int
+    symbol: str
+
+
+@dataclass
 class CancelOrderResponse(Base):
     order_id: str
 

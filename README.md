@@ -20,6 +20,10 @@ You will need to request an API key from the Orbs team, and provide us with your
 
 See `examples/create_order.py`.
 
+### Creating multiple orders in a batch
+
+See `examples/create_multiple_orders.py`.
+
 ### Signing an order
 
 See `examples/sign_order.py`.
@@ -31,6 +35,10 @@ See `examples/cancel_order.py`.
 ### Getting orders (open and filled)
 
 See `examples/get_orders.py`.
+
+### Other endpoints
+
+See `orbs_orderbook/client.py` for the full list of available endpoints.
 
 ## Folder structure
 
