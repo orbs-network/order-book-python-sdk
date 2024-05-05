@@ -1,4 +1,5 @@
 import random
+import os
 from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Any, Dict, Tuple
@@ -15,6 +16,11 @@ from orbs_orderbook.exceptions import (
 from orbs_orderbook.signer import Signer
 from orbs_orderbook.types import CreateOrderInput, EIP712Message, Token
 from orbs_orderbook.utils import convert_to_base_unit
+
+# 5 may 24
+REACTOR_ADDRESS = os.environ.get(
+    "REACTOR_ADDRESS", "0x4C4B950432189b3283A5111A6963ee318109695c"
+)
 
 
 class OrderSigner(Signer):
@@ -152,7 +158,8 @@ class OrderSigner(Signer):
 
         epoch_deadline = str(int(deadline.timestamp()))
 
-        reactor = "0x2Ee46d8d20020520d5266F3cAcc7c41e1AadD4C6"
+        reactor = REACTOR_ADDRESS
+        # reactor = "0x2Ee46d8d20020520d5266F3cAcc7c41e1AadD4C6"
         executor = "0x896D9b9Eee18F6C88C5575B78247834029375575"
 
         return {
